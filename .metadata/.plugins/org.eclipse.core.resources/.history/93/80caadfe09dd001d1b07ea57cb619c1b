@@ -1,0 +1,26 @@
+package com.hariyali.hariyali_project.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.hariyali.hariyali_project.dto.DonorInfoRequest;
+import com.hariyali.hariyali_project.entity.Report;
+import com.hariyali.hariyali_project.entity.TransactionS;
+
+public interface TransactionService {
+	
+	public TransactionS getTransactionByUser(TransactionS transaction);
+
+	//transaction by user id
+	public List<DonorInfoRequest> getAllReportDataByUserId(int userId);
+	
+	public List<TransactionS> GetAllDonors();
+	
+	public List<DonorInfoRequest> getDonorInfoList();
+	
+	public List<DonorInfoRequest> getAllDonations();
+	
+	public List<DonorInfoRequest> getAllReportDataByReciptNo(String reciptNo);
+	
+	public List<DonorInfoRequest> getUserDonationTable(int userId);
+}

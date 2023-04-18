@@ -1,0 +1,132 @@
+package com.hariyali.hariyali_project.dto;
+
+
+
+public class PaymentRequest {
+
+	
+	private double amount;
+	private int packageId;
+	private String displayedNameTree;
+	private boolean giftTree;
+	private String recepientName;
+	private String recepientAddress;
+	private String recepientContact;
+	private String recepientEmail;
+	private boolean benifit;
+	private String CustomGiftMessage;
+	private String pancardDetails;
+	private String paymentHolderName;
+	private int userId;
+	
+	
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public int getPackageId() {
+		return packageId;
+	}
+
+	public void setPackageId(int packageId) {
+		this.packageId = packageId;
+	}
+
+	public String getDisplayedNameTree() {
+		return displayedNameTree;
+	}
+
+	public void setDisplayedNameTree(String displayedNameTree) {
+		this.displayedNameTree = displayedNameTree;
+	}
+
+	public boolean isGiftTree() {
+		return giftTree;
+	}
+
+	public void setGiftTree(boolean giftTree) {
+		this.giftTree = giftTree;
+	}
+
+	public String getRecepientName() {
+		return recepientName;
+	}
+
+	public void setRecepientName(String recepientName) {
+		this.recepientName = recepientName;
+	}
+
+	public String getRecepientAddress() {
+		return recepientAddress;
+	}
+
+	public void setRecepientAddress(String recepientAddress) {
+		this.recepientAddress = recepientAddress;
+	}
+
+	public String getRecepientContact() {
+		return recepientContact;
+	}
+
+	public void setRecepientContact(String recepientContact) {
+		this.recepientContact = recepientContact;
+	}
+
+	public boolean isBenifit() {
+		return benifit;
+	}
+
+	public void setBenifit(boolean benifit) {
+		this.benifit = benifit;
+	}
+
+	public String getCustomGiftMessage() {
+		return CustomGiftMessage;
+	}
+
+	public void setCustomGiftMessage(String customGiftMessage) {
+		CustomGiftMessage = customGiftMessage;
+	}
+
+	public String getPancardDetails() {
+		return pancardDetails;
+	}
+
+	public void setPancardDetails(String pancardDetails) {
+		this.pancardDetails = pancardDetails;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public String getRecepientEmail() {
+		return recepientEmail;
+	}
+
+	public void setRecepientEmail(String recepientEmail) {
+		this.recepientEmail = recepientEmail;
+	}
+
+	public String getPaymentHolderName() {
+		return paymentHolderName;
+	}
+
+	public void setPaymentHolderName(String paymentHolderName) {
+		this.paymentHolderName = paymentHolderName;
+	}
+
+	
+	
+	
+
+	
+}

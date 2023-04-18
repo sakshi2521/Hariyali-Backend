@@ -1,0 +1,337 @@
+package com.hariyali.hariyali_project.entity;
+
+import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+
+@FilterDef(name = "deletedQuestionFilter", parameters = @ParamDef(name = "isDeleted",type = Boolean.class))
+@Filter(name = "deletedQuestionFilter", condition = "deleted = :isDeleted")
+
+@Table(name="transaction")
+public class TransactionS {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "my_transaction_id")
+	private int myTransactionId;
+	
+
+	@Column(name = "transaction_des")
+	private String Transactiondescription;
+	
+	@Column(name = "package_id")
+	private int packageId;
+	
+	@Column(name = "package_name")
+	private String packageName;
+	
+	@Column(name = "package_des")
+	private String packageDes;
+	
+	@Column(name = "package_price")
+	private int packagePrice; 
+	
+	@Column(name = "on_behalf")
+	private String NameOnTree;
+	
+	@Column(name = "gifted")
+	private Boolean giftTree = Boolean.FALSE;
+	
+	@Column(name = "custom_gift_message")
+	private String customGiftMsg;
+	
+	@Column(name = "recepient_name")
+	private String recepientName;
+	
+	@Column(name = "recepient_addr")
+	private String recepientAddr;
+	
+	@Column(name = "recepient_phone")
+	private String recepientContact;
+	
+	@Column(name = "recepient_email")
+	private String recepientEmail;
+	
+	@Column(name = "want_benifit")
+	private Boolean Benifit = Boolean.FALSE;
+	
+	@Column(name = "pancard_no")
+	private String PancardNo;
+	
+	@Column(name = "amount")
+	private double amount;
+	
+	@Column(name = "wish_amount")
+	private double wishAmount;
+	
+	@Column(name = "order_id")
+	private String orderId;
+	
+	@Column(name = "payment_id")
+	private String paymentId;
+	
+	@Column(name = "payment_holder_name")
+	private String paymentHolderName;
+	
+	@Column(name = "recept_no")
+	private String receiptNo;
+	
+	@Column(name = "transaction_status")
+	private String transactionStatus;
+	
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created_at")
+	private Date createdAt;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "updated_at")
+	private Date updatedAt; 
+	
+	@Column(name="created_by")
+	private String createdBy;
+	
+	@ManyToOne
+    @JoinColumn(name="user_id", nullable=false)
+	private Users user;
+
+	
+	
+	public String getTransactiondescription() {
+		return Transactiondescription;
+	}
+
+	public void setTransactiondescription(String transactiondescription) {
+		Transactiondescription = transactiondescription;
+	}
+
+	public int getPackageId() {
+		return packageId;
+	}
+
+	public void setPackageId(int packageId) {
+		this.packageId = packageId;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+
+	public String getPackageDes() {
+		return packageDes;
+	}
+
+	public void setPackageDes(String packageDes) {
+		this.packageDes = packageDes;
+	}
+
+	public int getPackagePrice() {
+		return packagePrice;
+	}
+
+	public void setPackagePrice(int packagePrice) {
+		this.packagePrice = packagePrice;
+	}
+
+	public String getNameOnTree() {
+		return NameOnTree;
+	}
+
+	public void setNameOnTree(String nameOnTree) {
+		NameOnTree = nameOnTree;
+	}
+
+	public Boolean getGiftTree() {
+		return giftTree;
+	}
+
+	public void setGiftTree(Boolean giftTree) {
+		this.giftTree = giftTree;
+	}
+
+	public String getCustomGiftMsg() {
+		return customGiftMsg;
+	}
+
+	public void setCustomGiftMsg(String customGiftMsg) {
+		this.customGiftMsg = customGiftMsg;
+	}
+
+	public String getRecepientName() {
+		return recepientName;
+	}
+
+	public void setRecepientName(String recepientName) {
+		this.recepientName = recepientName;
+	}
+
+	public String getRecepientAddr() {
+		return recepientAddr;
+	}
+
+	public void setRecepientAddr(String recepientAddr) {
+		this.recepientAddr = recepientAddr;
+	}
+
+	public String getRecepientContact() {
+		return recepientContact;
+	}
+
+	public void setRecepientContact(String recepientContact) {
+		this.recepientContact = recepientContact;
+	}
+
+	public String getRecepientEmail() {
+		return recepientEmail;
+	}
+
+	public void setRecepientEmail(String recepientEmail) {
+		this.recepientEmail = recepientEmail;
+	}
+
+	public Boolean getBenifit() {
+		return Benifit;
+	}
+
+	public void setBenifit(Boolean benifit) {
+		Benifit = benifit;
+	}
+
+	
+	public double getWishAmount() {
+		return wishAmount;
+	}
+
+	public void setWishAmount(double wishAmount) {
+		this.wishAmount = wishAmount;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getPaymentId() {
+		return paymentId;
+	}
+
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
+	}
+
+	public String getReceiptNo() {
+		return receiptNo;
+	}
+
+	public void setReceiptNo(String receiptNo) {
+		this.receiptNo = receiptNo;
+	}
+
+	public String getTransactionStatus() {
+		return transactionStatus;
+	}
+
+	public void setTransactionStatus(String transactionStatus) {
+		this.transactionStatus = transactionStatus;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+	public String getPancardNo() {
+		return PancardNo;
+	}
+
+	public void setPancardNo(String pancardNo) {
+		PancardNo = pancardNo;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getPaymentHolderName() {
+		return paymentHolderName;
+	}
+
+	public void setPaymentHolderName(String paymentHolderName) {
+		this.paymentHolderName = paymentHolderName;
+	}
+
+	public int getMyTransactionId() {
+		return myTransactionId;
+	}
+
+	public void setMyTransactionId(int myTransactionId) {
+		this.myTransactionId = myTransactionId;
+	}
+
+	
+	
+	
+}

@@ -1,0 +1,17 @@
+package com.hariyali.hariyali_project.dao;
+
+import java.util.Map;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.hariyali.hariyali_project.dto.DashBoardDto;
+
+@Repository
+public interface DashboardRepository extends JpaRepository<DashBoardDto,Integer> {
+
+	
+	@Query( value="select ( select count(*) From user_master) as DonorCount",nativeQuery=true)
+	public Map<String,Integer> getDashboardCount();
+}

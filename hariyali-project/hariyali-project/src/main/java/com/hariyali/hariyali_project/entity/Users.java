@@ -1,0 +1,122 @@
+package com.hariyali.hariyali_project.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name="user_master")
+@Data
+@FilterDef(name = "deletedUserFilter", parameters = @ParamDef(name = "isDeleted", type = Boolean.class))
+@Filter(name = "deletedUserFilter", condition = "deleted = :isDeleted")
+public class Users implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "user_id")
+	private int userId;
+	
+	@Column(name = "first_name")
+	private String firstName; 
+	
+	@Column(name = "last_name")
+	private String lastName;
+	
+	@Column(name = "user_name")
+	private String userName;
+	
+	@Column(name="user_code")
+	private String userCode;
+	
+	@Column(name = "phone")
+	private String userPhone;
+	
+	@Column(name = "email")
+	private String userEmail;
+	
+	@Column(name = "user_address")
+	private String userAddress;
+	
+	@Column(name = "designation")
+	private String userDesignation;
+	
+	@Column(name = "company_name")
+	private String userCompanyName; 
+	
+	@Column(name = "password")
+	private String userPassword ;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created_at")
+	private Date createdAt;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "updated_at")
+	private Date updatedAt; 
+	
+	@Column(name = "updated_by")
+	private String updatedBy ;
+	
+	@Column(name = "status")
+	private String userStatus;
+	
+	
+	
+	@Column(name = "attempts")
+	private Integer attempts;
+	
+	@Column(name = "deleted")
+	private Boolean isDeleted = Boolean.FALSE;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "last_login_dt")
+	private Date lastloginDt;
+	
+	
+	
+//	@Column(name="login_status")
+//	private  int loginStatus = 0;
+	
+	
+	// bi-directional many-to-one association to Usertypmst
+		@ManyToOne
+		@JoinColumn(name = "role_id")
+		private UserType userRole;
+
+		
+
+		@Column(name = "donor_id")
+		private String donorId;
+		
+		
+		
+		
+//	// bi-directional many-to-one association to Transaction
+//		@JsonIgnore
+//		@OneToMany(mappedBy = "transactions")
+//		private List<Transaction> transaction;
+
+		
+}

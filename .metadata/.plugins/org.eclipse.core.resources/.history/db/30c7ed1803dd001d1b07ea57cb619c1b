@@ -1,0 +1,33 @@
+package com.hariyali.hariyali_project.dto;
+
+import java.util.List;
+import java.util.Map;
+
+import com.hariyali.hariyali_project.entity.Stories;
+import com.hariyali.hariyali_project.entity.Users;
+
+public class DashboardDto {
+
+	public Double donorCount;
+	public Double totalDonation;
+	
+	
+	public Double getDonorCount() {
+		return donorCount;
+	}
+	public void setDonorCount(Double donorCount) {
+		this.donorCount = donorCount;
+	}
+	public Double getTotalDonation() {
+		return totalDonation;
+	}
+	public void setTotalDonation(Double totalDonation) {
+		this.totalDonation = totalDonation;
+	}
+	
+	
+//	public List<Stories> userStories;
+	
+	
+	
+}

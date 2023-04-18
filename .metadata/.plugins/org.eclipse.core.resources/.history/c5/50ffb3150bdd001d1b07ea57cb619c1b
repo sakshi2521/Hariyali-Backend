@@ -1,0 +1,59 @@
+package com.hariyali.hariyali_project.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "user_location_details")
+public class MapEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Integer mapId;
+
+    @Column(name = "activity")
+    private String activity;
+
+    @Column(name = "latitude")
+    private Long lat;
+    
+    
+    @Column(name = "longitude")
+    private Long lng;
+    
+    @Column(name = "distance")
+    private Long distance;
+    
+    @Column(name = "timestamp")
+    private Date timestamp;
+    
+    @Column(name = "session_id")
+    private String session_id;
+    
+    
+    @ManyToOne 
+    @JoinColumn(name = "transaction_id")
+    private Transaction transactions;
+
+    
+    private DonarDetails donor;
+
+	
+    
+    
+}

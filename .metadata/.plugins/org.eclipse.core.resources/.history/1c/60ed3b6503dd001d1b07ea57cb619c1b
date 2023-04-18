@@ -1,0 +1,27 @@
+package com.hariyali.hariyali_project.dto;
+
+public class DonarDetailsRequest {
+	
+	
+	private String donarName; 
+	
+	private int fileId;
+	
+	public String getDonarName() {
+		return donarName;
+	}
+
+	public void setDonarName(String donarName) {
+		this.donarName = donarName;
+	}
+
+	public int getFileId() {
+		return fileId;
+	}
+
+	public void setFileId(int fileId) {
+		this.fileId = fileId;
+	}
+
+	
+}

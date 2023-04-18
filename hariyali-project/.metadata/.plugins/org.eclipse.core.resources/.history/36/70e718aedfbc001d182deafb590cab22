@@ -1,0 +1,5 @@
+package com.hariyali.hariyali_project.dao;
+
+public interface DashboardRepository {
+
+}

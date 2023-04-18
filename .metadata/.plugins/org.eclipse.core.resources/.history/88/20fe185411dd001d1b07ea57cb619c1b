@@ -1,0 +1,118 @@
+package com.hariyali.hariyali_project.serviceImpl;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hariyali.hariyali_project.dao.MapRepository;
+import com.hariyali.hariyali_project.dto.MapDto;
+import com.hariyali.hariyali_project.dto.MapRequest;
+import com.hariyali.hariyali_project.dto.MapResponse;
+import com.hariyali.hariyali_project.entity.MapEntity;
+import com.hariyali.hariyali_project.entity.Transaction;
+import com.hariyali.hariyali_project.service.MapService;
+import org.hibernate.Filter;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import jakarta.persistence.EntityManager;
+
+@Service
+public class MapServiceImpl implements MapService{
+
+	
+	@Autowired
+	private MapRepository mapRepo;
+	
+	@Autowired
+	private EntityManager entityManager;
+	
+	
+	@Override
+	public Map<String, Object> getAllMapDetails(int pageNo, int pageSize) {
+		Pageable paging = PageRequest.of(pageNo - 1, pageSize);
+		Page<MapEntity> MapDetails = this.mapRepo.findAllByOrderByMapIdDesc(paging);
+		System.out.println("in Donar details service");
+		Map<String, Object> response = new HashMap<>();
+		response.put("packages", MapDetails.getContent());
+		response.put("currentPage", MapDetails.getNumber());
+		response.put("totalItems", MapDetails.getTotalElements());
+		response.put("totalPages", MapDetails.getTotalPages());
+//				session.disableFilter("deletedUserFilter");
+		if (MapDetails.hasContent()) {
+			return response;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public MapEntity getByMapId(int mapId) {
+		MapEntity mapDetails = new MapEntity();
+		Session session = entityManager.unwrap(Session.class);
+		Filter filter = session.enableFilter("deletedUserFilter");
+		filter.setParameter("isDeleted", false);
+		System.out.println("in package service");
+		mapDetails = this.mapRepo.findByMapId(mapId);
+
+		session.disableFilter("deletedUserFilter");
+		return mapDetails;
+	}
+
+	@Override
+	public MapResponse<MapEntity> saveMap(MapRequest mapDetails) {
+		ObjectMapper mapper = new ObjectMapper();
+		MapResponse<MapEntity>  response = new MapResponse<MapEntity>();
+
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		MapEntity savedMapDetails = mapper.convertValue(mapDetails, MapEntity.class);	
+		
+		Transaction transactions = new Transaction();
+		transactions.setMyTransactionId(mapDetails.getTransactionId());
+		
+		savedMapDetails.setTransactions(transactions);
+		
+		savedMapDetails.setActivity(mapDetails.getActivity());
+		
+//		savedDonarDetails.setFinancial_year(donarDetails.getFinancial_year());
+//		savedDonarDetails.setAssesment_year(donarDetails.getAssesment_year());
+//		
+		savedMapDetails.setTimestamp(new Date());
+		savedMapDetails.setLat(mapDetails.getLat());
+		savedMapDetails.setLng(mapDetails.getLng());
+
+		savedMapDetails.setDistance(mapDetails.getDistance());
+
+		savedMapDetails.setSessionId(mapDetails.getSession_id());
+		savedMapDetails = this.mapRepo.save(savedMapDetails);
+		
+		response.setMessage("Map Details Added Successfully");
+		response.setStatus("Success");
+		response.setStatusCode(HttpStatus.CREATED);
+		response.setResult(savedMapDetails);
+		//logger.info("addUser method executed successfully");
+		
+		return response;
+
+	}
+
+	@Override
+	public List<MapDto> getByMapDetails(String id) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		List<MapDto> mapEntity = objectMapper.convertValue(this.mapRepo.getByMapDetails(id),new TypeReference<List<MapDto>>() {});
+		 
+		return mapEntity;
+		
+	}
+
+}

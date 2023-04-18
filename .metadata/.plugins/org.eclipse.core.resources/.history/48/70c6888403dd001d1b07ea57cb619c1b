@@ -1,0 +1,249 @@
+package com.hariyali.hariyali_project.dto;
+
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+@JsonInclude(value = Include.NON_NULL)
+public class DonorInfoRequest {
+	
+
+	@JsonInclude(value =Include.NON_DEFAULT)
+	private int regestrationId;
+	@JsonInclude(value=Include.NON_DEFAULT)
+	private int transactionId;
+	private String paymentHolderName;
+	private String transactionStatus;
+	private String donorId;
+	
+	@JsonInclude(value =Include.NON_DEFAULT)
+	private int packageId;
+	private String packageName;
+	@JsonInclude(value =Include.NON_DEFAULT)
+	private int packagePrice;
+	@JsonInclude(value =Include.NON_DEFAULT)
+	private double wishAmount;
+	private String onBehalfOf;
+	private String giftedTo;
+	private String receipientAddress;
+	private String receipientContact;
+	private String receipientEmail;
+	private String donarAddress;
+	private String donarContact;
+	@JsonInclude(value=Include.NON_DEFAULT)
+	private boolean benifit;
+	private String pancardNo;
+	private String orderId;
+	private String paymentId;
+	private String receiptNo;
+	private Date donationDate;
+	@JsonInclude(value =Include.NON_DEFAULT)
+	private double amountPaid;
+	@JsonInclude(value =Include.NON_DEFAULT)
+	private double amount;
+	
+	
+	
+	@JsonInclude(value =Include.NON_DEFAULT)
+	private double totalDonation;
+	
+	@JsonInclude(value =Include.NON_DEFAULT)
+	private int certificateId;
+	
+	private String certificateNo;
+	
+	
+	//Getter and Setters 
+	
+	
+	
+	public String getPaymentHolderName() {
+		return paymentHolderName;
+	}
+	public String getDonorId() {
+		return donorId;
+	}
+	public void setPaymentHolderName(String paymentHolderName) {
+		this.paymentHolderName = paymentHolderName;
+	}
+	
+	
+	public Date getDonationDate() {
+		return donationDate;
+	}
+	public void setDonationDate(Date donationDate) {
+		this.donationDate = donationDate;
+	}
+	public void setDonorId(String donorId) {
+		this.donorId = donorId;
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "DonorInfoRequest [regestrationId=" + regestrationId + ", transactionId=" + transactionId
+				+ ", paymentHolderName=" + paymentHolderName + ", transactionStatus=" + transactionStatus + ", donorId="
+				+ donorId + ", packageId=" + packageId + ", packageName=" + packageName + ", packagePrice="
+				+ packagePrice + ", wishAmount=" + wishAmount + ", onBehalfOf=" + onBehalfOf + ", giftedTo=" + giftedTo
+				+ ", receipientAddress=" + receipientAddress + ", receipientContact=" + receipientContact
+				+ ", receipientEmail=" + receipientEmail + ", donarAddress=" + donarAddress + ", donarContact="
+				+ donarContact + ", benifit=" + benifit + ", pancardNo=" + pancardNo + ", orderId=" + orderId
+				+ ", paymentId=" + paymentId + ", receiptNo=" + receiptNo + ", donationDate=" + donationDate
+				+ ", amountPaid=" + amountPaid + ", amount=" + amount + ", totalDonation=" + totalDonation
+				+ ", certificateId=" + certificateId + ", certificateNo=" + certificateNo + "]";
+	}
+	public double getTotalDonation() {
+		return totalDonation;
+	}
+	public void setTotalDonation(double totalDonation) {
+		this.totalDonation = totalDonation;
+	}
+	public int getRegestrationId() {
+		return regestrationId;
+	}
+	public void setRegestrationId(int regestrationId) {
+		this.regestrationId = regestrationId;
+	}
+	public double getAmount() {
+		return amount;
+	}
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+	
+	
+	//get transaction by user
+	
+	public int getTransactionId() {
+		return transactionId;
+	}
+	public void setTransactionId(int transactionId) {
+		this.transactionId = transactionId;
+	}
+	public int getPackageId() {
+		return packageId;
+	}
+	public void setPackageId(int packageId) {
+		this.packageId = packageId;
+	}
+	public String getPackageName() {
+		return packageName;
+	}
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+	public int getPackagePrice() {
+		return packagePrice;
+	}
+	public void setPackagePrice(int packagePrice) {
+		this.packagePrice = packagePrice;
+	}
+	public String getOnBehalfOf() {
+		return onBehalfOf;
+	}
+	public void setOnBehalfOf(String onBehalfOf) {
+		this.onBehalfOf = onBehalfOf;
+	}
+	public String getGiftedTo() {
+		return giftedTo;
+	}
+	public void setGiftedTo(String giftedTo) {
+		this.giftedTo = giftedTo;
+	}
+	public String getReceipientAddress() {
+		return receipientAddress;
+	}
+	public void setReceipientAddress(String receipientAddress) {
+		this.receipientAddress = receipientAddress;
+	}
+	public String getReceipientContact() {
+		return receipientContact;
+	}
+	public void setReceipientContact(String receipientContact) {
+		this.receipientContact = receipientContact;
+	}
+	public String getReceipientEmail() {
+		return receipientEmail;
+	}
+	public void setReceipientEmail(String receipientEmail) {
+		this.receipientEmail = receipientEmail;
+	}
+	public String getDonarAddress() {
+		return donarAddress;
+	}
+	public void setDonarAddress(String donarAddress) {
+		this.donarAddress = donarAddress;
+	}
+	public String getDonarContact() {
+		return donarContact;
+	}
+	public void setDonarContact(String donarContact) {
+		this.donarContact = donarContact;
+	}
+	public boolean isBenifit() {
+		return benifit;
+	}
+	public void setBenifit(boolean benifit) {
+		this.benifit = benifit;
+	}
+	public String getPancardNo() {
+		return pancardNo;
+	}
+	public void setPancardNo(String pancardNo) {
+		this.pancardNo = pancardNo;
+	}
+	public String getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+	public String getPaymentId() {
+		return paymentId;
+	}
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
+	}
+	public String getTransactionStatus() {
+		return transactionStatus;
+	}
+	public void setTransactionStatus(String transactionStatus) {
+		this.transactionStatus = transactionStatus;
+	}
+	public String getReceiptNo() {
+		return receiptNo;
+	}
+	public void setReceiptNo(String receiptNo) {
+		this.receiptNo = receiptNo;
+	}
+	public double getWishAmount() {
+		return wishAmount;
+	}
+	public void setWishAmount(double wishAmount) {
+		this.wishAmount = wishAmount;
+	}
+	public double getAmountPaid() {
+		return amountPaid;
+	}
+	public void setAmountPaid(double amountPaid) {
+		this.amountPaid = amountPaid;
+	}
+	public int getCertificateId() {
+		return certificateId;
+	}
+	public void setCertificateId(int certificateId) {
+		this.certificateId = certificateId;
+	}
+	public String getCertificateNo() {
+		return certificateNo;
+	}
+	public void setCertificateNo(String certificateNo) {
+		this.certificateNo = certificateNo;
+	}
+
+
+
+	
+	
+	
+}

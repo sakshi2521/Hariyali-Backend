@@ -1,0 +1,159 @@
+package com.hariyali.hariyali_project.dto;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+@JsonInclude(value = Include.NON_NULL)
+public class UsersRequest {
+	private int userId;
+	@NotBlank(message = "First name should not be null")
+	private String firstName; 
+	@NotBlank(message = "Last name should not be null")
+	private String lastName;
+	private String userName;
+	private String userCode;
+	
+	@NotNull
+	private String userPhone;
+	
+	@NotNull
+	//@Email(message = "Email should be valid", regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}")
+	private String userEmail;
+	//private String userAddress;
+	private String userDesignation;
+	private String userCompanyName; 
+	private String userPassword ;
+	private String userStatus;
+	private int roleId;
+	private String userAddress;
+	//Getters and Setters
+	
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+
+	public String getUserName() {
+		return userName;
+	}
+
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+
+	public String getUserPhone() {
+		return userPhone;
+	}
+
+
+	public void setUserPhone(String userPhone) {
+		this.userPhone = userPhone;
+	}
+
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+
+
+	public String getUserDesignation() {
+		return userDesignation;
+	}
+
+
+	public void setUserDesignation(String userDesignation) {
+		this.userDesignation = userDesignation;
+	}
+
+
+	public String getUserCompanyName() {
+		return userCompanyName;
+	}
+
+
+	public void setUserCompanyName(String userCompanyName) {
+		this.userCompanyName = userCompanyName;
+	}
+
+
+	public String getUserPassword() {
+		return userPassword;
+	}
+
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
+
+
+	public String getUserStatus() {
+		return userStatus;
+	}
+
+
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
+	}
+
+	public int getRoleId() {
+		return roleId;
+	}
+
+
+	public void setRoleId(int roleId) {
+		this.roleId = roleId;
+	}
+
+
+	public String getUserCode() {
+		return userCode;
+	}
+
+
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
+	}
+
+
+	public String getUserAddress() {
+		return userAddress;
+	}
+
+
+	public void setUserAddress(String userAddress) {
+		this.userAddress = userAddress;
+	}
+
+	
+}

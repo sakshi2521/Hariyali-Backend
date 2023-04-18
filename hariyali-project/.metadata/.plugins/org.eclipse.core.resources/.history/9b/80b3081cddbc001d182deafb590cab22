@@ -1,0 +1,12 @@
+package com.hariyali.hariyali_project.dto;
+
+import java.util.List;
+import java.util.Map;
+
+public class DashBoardDto {
+
+	public List<Map<String, Object>> donorList;
+	public List<Map<String,Object>> leaderBoard;
+	
+	
+}

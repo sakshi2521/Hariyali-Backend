@@ -1,0 +1,78 @@
+package com.hariyali.hariyali_project.dto;
+
+import java.util.Date;
+
+public class DonarDetailsRequest {
+	private int detailId;
+	
+	private String donarName; 
+	
+	private int fileId;
+	
+	private int user_id;
+	
+	private String file_name;
+	
+	private Date assesment_year;
+	
+	private Date financial_year;
+
+	public int getDetailId() {
+		return detailId;
+	}
+
+	public void setDetailId(int detailId) {
+		this.detailId = detailId;
+	}
+
+	public String getDonarName() {
+		return donarName;
+	}
+
+	public void setDonarName(String donarName) {
+		this.donarName = donarName;
+	}
+
+	public int getFileId() {
+		return fileId;
+	}
+
+	public void setFileId(int fileId) {
+		this.fileId = fileId;
+	}
+
+	public int getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getFile_name() {
+		return file_name;
+	}
+
+	public void setFile_name(String file_name) {
+		this.file_name = file_name;
+	}
+
+	public Date getAssesment_year() {
+		return assesment_year;
+	}
+
+	public void setAssesment_year(Date assesment_year) {
+		this.assesment_year = assesment_year;
+	}
+
+	public Date getFinancial_year() {
+		return financial_year;
+	}
+
+	public void setFinancial_year(Date financial_year) {
+		this.financial_year = financial_year;
+	}
+	
+	
+	
+}

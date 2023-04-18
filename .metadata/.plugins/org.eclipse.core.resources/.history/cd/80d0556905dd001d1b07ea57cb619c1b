@@ -1,0 +1,116 @@
+package com.hariyali.hariyali_project.dto;
+
+
+public class PlantResponse {
+	
+    private int plantId;
+	
+	
+	private String title; 
+	
+	
+	private double cost;
+	
+	private double quantity;
+	
+	private double total;
+	
+	
+	private boolean status;
+
+	
+	
+//	private List<Packages>packages=new ArrayList();
+
+
+
+	public int getPlantId() {
+		return plantId;
+	}
+
+
+
+	public void setPlantId(int plantId) {
+		this.plantId = plantId;
+	}
+
+
+
+	public String getTitle() {
+		return title;
+	}
+
+
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+
+
+	public double getCost() {
+		return cost;
+	}
+
+
+
+	public void setCost(double cost) {
+		this.cost = cost;
+	}
+
+
+
+	public boolean isStatus() {
+		return status;
+	}
+
+
+
+	public void setPrice(boolean status) {
+		this.status = status;
+	}
+
+
+
+	public double getQuantity() {
+		return quantity;
+	}
+
+
+
+	public void setQuantity(double quantity) {
+		this.quantity = quantity;
+	}
+
+
+
+	public double getTotal() {
+		return total;
+	}
+
+
+
+	public void setTotal(double total) {
+		this.total = total;
+	}
+
+
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+
+
+//	public List<Packages> getPackages() {
+//		return packages;
+//	}
+//
+//
+//
+//	public void setPackages(List<Packages> packages) {
+//		this.packages = packages;
+//	}
+
+
+}

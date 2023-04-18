@@ -1,0 +1,83 @@
+package com.hariyali.hariyali_project.dto;
+
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+
+public class PlantRequest {
+	
+	
+	
+	private String title; 
+	private double quantity;
+	private double total;
+	
+	private double cost;
+	
+	
+	private boolean status;
+
+
+	public String getTitle() {
+		return title;
+	}
+
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+
+	public double getQuantity() {
+		return quantity;
+	}
+
+
+	public void setQuantity(double quantity) {
+		this.quantity = quantity;
+	}
+
+
+	public double getTotal() {
+		return total;
+	}
+
+
+	public void setTotal(double total) {
+		this.total = total;
+	}
+
+
+	public double getCost() {
+		return cost;
+	}
+
+
+	public void setCost(double cost) {
+		this.cost = cost;
+	}
+
+
+	public boolean isStatus() {
+		return status;
+	}
+
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+	
+	
+
+	
+	
+	//private List<Packages>packages=new ArrayList();
+
+
+
+		
+
+}

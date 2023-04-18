@@ -1,0 +1,9 @@
+package com.hariyali.hariyali_project.service;
+
+import com.hariyali.hariyali_project.dto.DashBoardDto;
+import com.hariyali.hariyali_project.dto.JwtResponse;
+
+public interface DashboardService {
+
+	public JwtResponse<DashBoardDto> getDashboardData();
+}

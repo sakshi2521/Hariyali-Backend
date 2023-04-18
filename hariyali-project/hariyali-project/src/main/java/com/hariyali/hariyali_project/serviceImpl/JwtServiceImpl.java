@@ -1,0 +1,386 @@
+package com.hariyali.hariyali_project.serviceImpl;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Date;
+import java.util.Optional;
+
+import com.hariyali.hariyali_project.confing.CustomUserDetailService;
+import com.hariyali.hariyali_project.confing.JwtHelper;
+import com.hariyali.hariyali_project.dao.UserTypeRepository;
+import com.hariyali.hariyali_project.dao.UsersRepository;
+import com.hariyali.hariyali_project.dto.JwtRequest;
+import com.hariyali.hariyali_project.dto.JwtResponse;
+import com.hariyali.hariyali_project.entity.TokenLoginUser;
+import com.hariyali.hariyali_project.entity.UserType;
+import com.hariyali.hariyali_project.entity.Users;
+import com.hariyali.hariyali_project.service.JwtService;
+import com.hariyali.hariyali_project.service.TokenLoginUserService;
+import com.hariyali.hariyali_project.utils.EmailService;
+
+import org.apache.catalina.authenticator.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+@Service
+public class JwtServiceImpl implements JwtService{
+
+	@Autowired
+	private JwtHelper jwtHelper;
+	
+	@Autowired
+	private UsersRepository userRepository;
+	
+	
+	@Autowired
+	private CustomUserDetailService customUserDetailService;
+	
+	@Autowired
+	private TokenLoginUserService tokenLoginUserService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private EmailService emailService;
+	
+	
+	
+	private static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
+	
+	@Value("${user.account.locktime}")
+	private Integer lockTime;
+	
+	
+	
+	@Override
+	public JwtResponse<String> login(JwtRequest request) {
+		
+		JwtResponse<String> jwtResponse = new JwtResponse<>();
+		//Users user = userRepository.findByUserCode(request.getUsername());
+		
+		
+		Optional<Users> userResponse = Optional.ofNullable(userRepository.findByDonorId(request.getUsername()));
+		System.err.println("user" +userResponse);
+		 
+		if (userResponse.isPresent()) {
+			Users user = userResponse.get();
+			System.err.println("user" +user);
+			logger.debug("User found - {}", user.getDonorId());
+			if(user.getLastloginDt()!=null ) {
+			Date dt = user.getLastloginDt();
+			long updatedDate = dt.getTime();
+			long currentDate = new Date().getTime();
+			long timeDiff = currentDate - updatedDate;
+			timeDiff = timeDiff / 1000; // time difference in sec
+			long lockTimeSec = lockTime * 60; // lockTime in sec
+
+			// is user locked or not
+			boolean isAccountUnlock = (lockTimeSec - timeDiff) > 0 ? false : true;
+			if (isAccountUnlock && user.getAttempts() >= 3) {
+				user.setAttempts(0);
+				//user.setLoginStatus(1);
+				user.setLastloginDt(new Date());
+				userRepository.save(user);
+			}
+			}
+			
+			if (request.getUsername().equals(user.getDonorId()) && this.passwordEncoder.matches(request.getPassword(),user.getUserPassword()) && (user.getAttempts() < 3)) {
+				// Generate token
+				UserDetails userDetails = this.customUserDetailService.loadUserByUsername(request.getUsername());
+				String token =this.jwtHelper.generateToken(userDetails);
+				TokenLoginUser loginUser = tokenLoginUserService.findByUsername(request.getUsername());
+				//activate user
+				String startDate = user.getUpdatedAt().toString();
+				System.out.println("startDate"+startDate);
+				if(startDate!=null)
+				{
+					
+				}
+				LocalDate sdate = LocalDate.parse(startDate);
+				LocalDate pdate = java.time.LocalDate.now();
+				System.out.println("sdate"+sdate);
+				System.out.println("pdate"+pdate);
+
+				LocalDate ssdate = LocalDate.of(sdate.getYear(), sdate.getMonth(), sdate.getDayOfMonth());
+				LocalDate ppdate = LocalDate.of(pdate.getYear(), pdate.getMonth(), pdate.getDayOfMonth());
+
+				Period period = Period.between(ssdate, ppdate);
+				int year = period.getYears();
+				int totalMonth = year*12+period.getMonths();
+				System.out.println("totalMonth"+totalMonth);
+				 if(totalMonth>6)
+				{
+						System.out.println("user"+user.toString());
+
+					user.setUserStatus("Inactive");
+					user.setIsDeleted(true); 
+					jwtResponse.setMessage("Your account is deactivated check mail ");
+					jwtResponse.setStatusCode(HttpStatus.LOCKED);
+					jwtResponse.setStatus("ERROR");
+					this.sendEmailActivation(user.getUserEmail());
+					userRepository.save(user);
+					return jwtResponse;
+				}
+				 else if (loginUser != null && !loginUser.isFlag())
+				{
+					loginUser.setFlag(true);
+					loginUser.setLastUpdatedOn(new Date());
+					loginUser.setToken(token);
+					tokenLoginUserService.updateToken(loginUser);
+				} else if (loginUser == null) {
+					loginUser = new TokenLoginUser();
+					loginUser.setToken(token);
+					loginUser.setUsername(request.getUsername());
+					loginUser.setFlag(true);
+					loginUser.setLastUpdatedOn(new Date());
+					tokenLoginUserService.saveUser(loginUser);
+				} else if (loginUser != null && loginUser.isFlag()) {
+					loginUser.setFlag(true);
+					loginUser.setLastUpdatedOn(new Date());
+					loginUser.setToken(token);
+					tokenLoginUserService.updateToken(loginUser);
+				}
+				user.setLastloginDt(new Date());
+				user.setAttempts(0);
+				//user.setLoginStatus(1);
+				userRepository.save(user);
+				jwtResponse.setToken(token);
+				jwtResponse.setStatus("SUCCESS");
+				jwtResponse.setMessage("Login Successfully");
+				jwtResponse.setStatusCode(HttpStatus.OK);
+				return jwtResponse;
+			} else {
+				user.setLastloginDt(new Date());
+				user.setUpdatedAt(new Date());
+				Integer userAttempt = user.getAttempts();
+				if (userAttempt < 3) {
+					user.setAttempts(userAttempt + 1);
+				} 
+				else {
+					//user.setLoginStatus(0);
+					jwtResponse.setMessage("Your account is locked due to 3 incorrect attempt. Please contact admin or wait for "
+							+ lockTime + " minuits");
+					jwtResponse.setStatusCode(HttpStatus.LOCKED);
+					jwtResponse.setStatus("ERROR");
+					return jwtResponse;
+				}
+				userRepository.save(user);
+				Integer remaining = 4 - (user.getAttempts());
+				logger.debug("User with {} not found", request.getUsername());
+				jwtResponse.setStatus("ERROR");
+				jwtResponse.setMessage("Incorrect credentials entered.Remaining attemp is: " + remaining);
+				jwtResponse.setStatusCode(HttpStatus.BAD_REQUEST);
+				return jwtResponse;
+			}
+		}
+//		if (user != null) {
+//			logger.debug("User found - {}", user.getUserCode());
+//			Date dt = user.getUpdatedAt();
+//			long updatedDate = dt.getTime();
+//			long currentDate = new Date().getTime();
+//			long timeDiff = currentDate - updatedDate;
+//			timeDiff = timeDiff / 1000; // time difference in sec
+//			long lockTimeSec = lockTime * 60; // lockTime in sec
+//
+//			 //is user locked or not
+//			boolean isAccountUnlock = (lockTimeSec - timeDiff) > 0 ? false : true;
+//			if (isAccountUnlock && user.getAttempts() >= 3) {
+//				user.setAttempts(0);
+//				user.setCreatedAt(dt);
+//				user.setUpdatedAt(new Date());
+//				userRepository.save(user);
+//			}
+//			if (request.getUsername().equals(user.getUserCode()) && this.passwordEncoder.matches(request.getPassword(),user.getUserPassword()) && (user.getAttempts() < 3)) {
+//				// Generate token
+//				UserDetails userDetails = this.customUserDetailService.loadUserByUsername(request.getUsername());
+//				String token = this.jwtHelper.generateToken(userDetails);
+//				TokenLoginUser loginUser = tokenLoginUserService.findByUsername(request.getUsername());
+//				if (loginUser != null && !loginUser.isFlag()) {
+//					loginUser.setFlag(true);
+//					loginUser.setLastUpdatedOn(new Date());
+//					loginUser.setToken(token);
+//					tokenLoginUserService.updateToken(loginUser);
+//				} else if (loginUser == null){
+//					loginUser = new TokenLoginUser();
+//					loginUser.setToken(token);
+//					loginUser.setUsername(request.getUsername());
+//					loginUser.setFlag(true);
+//					loginUser.setLastUpdatedOn(new Date());
+//					tokenLoginUserService.saveUser(loginUser);
+//				}else if (loginUser != null && loginUser.isFlag()) {
+//					loginUser.setFlag(true);
+//					loginUser.setLastUpdatedOn(new Date());
+//					loginUser.setToken(token);
+//					tokenLoginUserService.updateToken(loginUser);
+//				}
+//					
+//				user.setAttempts(0);
+//				userRepository.save(user);
+//				jwtResponse.setToken(token);
+//				jwtResponse.setStatus("Success");
+//				jwtResponse.setMessage("Login Successfully");
+//				jwtResponse.setStatusCode(HttpStatus.OK);
+////				jwtResponse.setRole(roleName);
+//				return jwtResponse;
+//			} else {
+//				user.setCreatedAt(new Date());
+//				user.setUpdatedAt(new Date());
+//				Integer userAttempt = user.getAttempts();
+//				if (userAttempt < 3) {
+//					user.setAttempts(userAttempt + 1);
+//				} else {
+//					jwtResponse.setMessage("Your account is locked due to 3 incorrect attempt. Please contact admin or wait for  minuits");
+//					jwtResponse.setStatusCode(HttpStatus.LOCKED);
+//					jwtResponse.setStatus("Error");
+//					return jwtResponse;
+//				}
+//				userRepository.save(user);
+//				Integer remaining = 4 - (user.getAttempts());
+//				logger.debug("User with {} not found", request.getUsername());
+//				jwtResponse.setStatus("Error");
+//				jwtResponse.setMessage("Incorrect credentials entered.Remaining attemp is: " + remaining);
+//				jwtResponse.setStatusCode(HttpStatus.BAD_REQUEST);
+//				return jwtResponse;
+//			}
+//		}
+		jwtResponse.setStatus("Error");
+		jwtResponse.setMessage("Incorrect credentials entered.");
+		jwtResponse.setStatusCode(HttpStatus.BAD_REQUEST);
+		return jwtResponse;
+	}
+
+	
+	//Email for Account activate
+	
+	public JwtResponse<String> sendEmailActivation(String email) {
+		JwtResponse<String> res = new JwtResponse<String>();
+		Optional<Users> userOptional = Optional.ofNullable(userRepository.findByUserEmail(email));
+		if (!userOptional.isPresent()) {
+			res.setStatus("Error");
+			res.setMessage("Invalid User Name");
+			res.setStatusCode(HttpStatus.BAD_REQUEST);
+			return res;
+		}
+		Users user = userOptional.get();
+		//String token = this.jwtHelper.generateToken(userDetails);
+
+		String subject = "Account Acctivation";
+		String content = "Dear Sir/Madam,\n \tYou have requested to Activate your account."
+				+ "Click the link below to activate your account :\n http://localhost:3000/activateuser"
+				+"\n \n Note: Link is valid for 1 hour.\n" 
+				+ "";
+		emailService.sendSimpleEmail(email, subject, content);
+	
+		
+		res.setStatus("Sucess");
+		//res.setMessage("Reset Password link has been send to your email ");
+//		res.setResult("http://localhost:3000/resetPassword?token="+token);
+		res.setStatusCode(HttpStatus.OK);
+		return res;
+	}
+	
+	//Reset Password
+	@Override
+	public JwtResponse<String> resetPassword(String token, String resetPassword) {
+		JwtResponse<String> res = new JwtResponse<String>();
+		String userName = jwtHelper.getUsernameFromToken(token);
+		UserDetails userDetails = this.customUserDetailService.loadUserByUsername(userName);
+		if (!jwtHelper.validateToken(token, userDetails)) {
+			res.setStatus("Error");
+			res.setMessage("Token Expired");
+			res.setStatusCode(HttpStatus.UNAUTHORIZED);
+			return res;
+		}
+		Optional<Users> userOptional = Optional.ofNullable(userRepository.findByDonorId(userName));
+		Users user = userOptional.get();
+		user.setUserPassword(this.passwordEncoder.encode(resetPassword));
+		userRepository.save(user);
+		res.setMessage("You have successfully changed your password.");
+		res.setStatusCode(HttpStatus.OK);
+		return res;
+	}
+
+	//Email
+	
+	public JwtResponse<String> sendEmailPassword(String email) {
+		JwtResponse<String> res = new JwtResponse<String>();
+		Optional<Users> userOptional = Optional.ofNullable(userRepository.findByUserEmail(email));
+		if (!userOptional.isPresent()) {
+			res.setStatus("Error");
+			res.setMessage("Invalid User Name");
+			res.setStatusCode(HttpStatus.BAD_REQUEST);
+			return res;
+		}
+		Users user = userOptional.get();
+		UserDetails userDetails = this.customUserDetailService.loadUserByUsername(user.getDonorId());
+		String token = this.jwtHelper.generateToken(userDetails);
+		String subject = "Reset password link";
+		String content = "Dear Sir/Madam,\n \tYou have requested to reset your password."
+				+ "Click the link below to change your password :\n http://localhost:3000/resetPassword?token="+ token
+				+"\n \n Note: Link is valid for 1 hour.\n" 
+				+ " Ignore this email if you do remember your password,or you have not made the request.";
+		emailService.sendSimpleEmail(email, subject, content);
+	
+		
+		res.setStatus("Sucess");
+		res.setMessage("Reset Password link has been send to your email ");
+//		res.setResult("http://localhost:3000/resetPassword?token="+token);
+		res.setStatusCode(HttpStatus.OK);
+		return res;
+	}
+
+	//logout
+	
+	public JwtResponse<String> logout(JwtRequest request,String token) {
+		JwtResponse<String> res = new JwtResponse<String>();
+		Optional<Users> userOptional = Optional.ofNullable(userRepository.findByDonorId(request.getUsername()));
+		if (!userOptional.isPresent()) {
+			res.setStatus("ERROR");
+			res.setMessage("Invalid User Name");
+			res.setStatusCode(HttpStatus.BAD_REQUEST);
+			return res;
+		}
+		String userName = jwtHelper.getUsernameFromToken(token);
+		if(request.getUsername().equals(userName)) {
+			this.customUserDetailService.loadUserByUsername(userName);
+			Users user = userOptional.get();
+			if( user.getUserPassword()==null || !this.passwordEncoder.matches(request.getPassword(),user.getUserPassword())) {
+				res.setStatus("ERROR");
+				res.setMessage("Invalid Creditials");
+				res.setStatusCode(HttpStatus.BAD_REQUEST);
+				return res;
+			};
+			TokenLoginUser tokenLoginUser = tokenLoginUserService.findByUsername(request.getUsername());
+			if (tokenLoginUser != null && tokenLoginUser.isFlag()) {
+				tokenLoginUser.setFlag(false);
+				tokenLoginUserService.updateToken(tokenLoginUser);
+			}
+			if (user != null) {
+				//user.setLoginStatus(0);
+				userRepository.save(user);
+				res.setMessage("Logged out successfully");
+				res.setStatus("SUCCESS");
+				res.setStatusCode(HttpStatus.OK);
+				return res;
+			}
+		}
+		res.setStatus("ERROR");
+		res.setMessage("Invalid JWT Token");
+		res.setStatusCode(HttpStatus.UNAUTHORIZED);
+		return res;
+	}
+
+	
+
+	
+
+	
+
+}

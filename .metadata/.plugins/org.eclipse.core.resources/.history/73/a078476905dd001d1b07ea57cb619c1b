@@ -1,0 +1,77 @@
+package com.hariyali.hariyali_project.dto;
+
+
+
+public class PackagesRequest {
+
+	private String title; 
+	
+	private String description;
+	
+	
+	
+	
+	private double price;
+	
+	
+	
+	
+	
+	
+//	private int plantId;
+//	
+//	private List<Plants>plant;
+	
+	
+
+//	public int getPlantId() {
+//		return plantId;
+//	}
+//
+//	public void setPlantId(int plantId) {
+//		this.plantId = plantId;
+//	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+//	public List<Plants> getPlant() {
+//		return plant;
+//	}
+//
+//	public void setPlant(List<Plants> plant) {
+//		this.plant = plant;
+//	}
+
+	
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	
+
+	
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	
+
+	
+	
+	
+}

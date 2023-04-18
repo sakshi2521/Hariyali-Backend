@@ -1,0 +1,29 @@
+package com.hariyali.hariyali_project.dto;
+
+import java.util.List;
+import java.util.Map;
+
+import com.hariyali.hariyali_project.entity.Users;
+
+public class DashboardDto {
+
+	public long donorCount;
+	//list of al donors
+	public List<Users> donors;
+	public long getDonorCount() {
+		return donorCount;
+	}
+	public void setDonorCount(long donorCount) {
+		this.donorCount = donorCount;
+	}
+	public List<Users> getDonors() {
+		return donors;
+	}
+	public void setDonors(List<Users> donors) {
+		this.donors = donors;
+	}
+	
+	//no of trees planted pending
+	
+	
+}

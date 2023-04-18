@@ -1,0 +1,46 @@
+package com.hariyali.hariyali_project.service;
+
+import java.security.Principal;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.security.core.Authentication;
+
+import com.hariyali.hariyali_project.dto.DonorInfoRequest;
+import com.hariyali.hariyali_project.dto.JwtResponse;
+import com.hariyali.hariyali_project.dto.UsersRequest;
+import com.hariyali.hariyali_project.entity.Users;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+public interface UsersService {
+
+	public Map<String, Object> getUsers(int pageNo, int pageSize);
+
+	public Users getByUserCode(String username);
+	
+	public Users getUserProfile(int userId);
+
+	public Users getByUserEmail(String username);
+
+	public JwtResponse<Users> saveUser(UsersRequest jwt,HttpServletRequest request);
+
+	public JwtResponse<Users> updateUser(String userCode, UsersRequest user, HttpServletRequest request);
+
+	public JwtResponse<Users> deleteUserByCode(String userCode);
+
+	public JwtResponse<String> sendEmailDonorId(String email);
+	
+	public JwtResponse<Users> deleteUserByDonorId(String donorId);
+	
+	//public Users getCurrentlyLoggedInUser(Authentication authentication);
+
+	Users getCurrentlyLoggedInUser(Principal principal);
+	
+	public JwtResponse<String> updateUserForactivation(String userName);
+	
+	
+	//user profile
+	public List<UsersRequest> getDonorInfo(int userId);
+	
+}

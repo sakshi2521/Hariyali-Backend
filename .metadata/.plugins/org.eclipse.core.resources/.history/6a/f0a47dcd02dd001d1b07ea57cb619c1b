@@ -1,0 +1,198 @@
+package com.hariyali.hariyali_project.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="user_reciept")
+public class Report {
+	
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "receipt_id")
+	private int receiptId;
+	
+	@Column(name = "name_on_tree")
+	private String NameOnTree;
+	
+	@Column(name = "gift_tree")
+	private Boolean giftTree = Boolean.FALSE;
+	
+	
+	@Column(name = "recepient_name")
+	private String recepientName;
+	
+	@Column(name = "recepient_addr")
+	private String recepientAddr;
+	
+	@Column(name = "recepient_contact")
+	private String recepientContact;
+	
+	@Column(name = "benifit")
+	private Boolean Benifit = Boolean.FALSE;
+	
+	@Column(name = "amount")
+	private double amount;
+	
+	
+	@Column(name = "pancard_no")
+	private String pancardNo;
+	
+	@Column(name = "gift_certificate_msg")
+	private String customGiftMsg;
+	
+	@Column(name = "package_name")
+	private String packageName;
+	
+	@Column(name = "package_des")
+	private String packageDes;
+	
+	
+	@Column(name = "package_id")
+	private String packageId;
+	
+	
+	
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private Users user;
+	
+	public int getReceiptId() {
+		return receiptId;
+	}
+
+	public void setReceiptId(int receiptId) {
+		this.receiptId = receiptId;
+	}
+
+	
+
+	public String getNameOnTree() {
+		return NameOnTree;
+	}
+
+	public void setNameOnTree(String nameOnTree) {
+		NameOnTree = nameOnTree;
+	}
+
+	public Boolean getGiftTree() {
+		return giftTree;
+	}
+
+	public void setGiftTree(Boolean giftTree) {
+		this.giftTree = giftTree;
+	}
+
+	public String getRecepientName() {
+		return recepientName;
+	}
+
+	public void setRecepientName(String recepientName) {
+		this.recepientName = recepientName;
+	}
+
+	public String getRecepientAddr() {
+		return recepientAddr;
+	}
+
+	public void setRecepientAddr(String recepientAddr) {
+		this.recepientAddr = recepientAddr;
+	}
+
+	public String getRecepientContact() {
+		return recepientContact;
+	}
+
+	public void setRecepientContact(String recepientContact) {
+		this.recepientContact = recepientContact;
+	}
+
+	public Boolean getBenifit() {
+		return Benifit;
+	}
+
+	public void setBenifit(Boolean benifit) {
+		Benifit = benifit;
+	}
+
+	public String getPancardNo() {
+		return pancardNo;
+	}
+
+	public void setPancardNo(String pancardNo) {
+		this.pancardNo = pancardNo;
+	}
+
+	
+
+	
+
+	public String getCustomGiftMsg() {
+		return customGiftMsg;
+	}
+
+	public void setCustomGiftMsg(String customGiftMsg) {
+		this.customGiftMsg = customGiftMsg;
+	}
+
+	
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+
+	public String getPackageDes() {
+		return packageDes;
+	}
+
+	public void setPackageDes(String packageDes) {
+		this.packageDes = packageDes;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	
+
+	public String getPackageId() {
+		return packageId;
+	}
+
+	public void setPackageId(String packageId) {
+		this.packageId = packageId;
+	}
+
+	
+	
+	
+
+}

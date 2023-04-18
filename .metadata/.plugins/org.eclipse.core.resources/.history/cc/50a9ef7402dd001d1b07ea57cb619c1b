@@ -1,0 +1,97 @@
+package com.hariyali.hariyali_project.entity;
+
+import java.util.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+@Table(name="donar_form_details")
+public class DonarDetails {
+	
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "detailId")
+	private int detailId;
+	
+	
+	@Column(name = "DonarName")
+	private String donarName; 
+	
+	@Column(name = "financial_year")
+	private Date financial_year;
+	
+	@Column(name = "assesment_year")
+	private Date assesment_year;
+	
+	
+	@ManyToOne
+	@JoinColumn(name="file_id")
+	private FileContent file;
+
+
+	public int getDetailId() {
+		return detailId;
+	}
+
+
+	public void setDetailId(int detailId) {
+		this.detailId = detailId;
+	}
+
+
+	public String getDonarName() {
+		return donarName;
+	}
+
+
+	public void setDonarName(String donarName) {
+		this.donarName = donarName;
+	}
+
+
+	public Date getFinancial_year() {
+		return financial_year;
+	}
+
+
+	public void setFinancial_year(Date financial_year) {
+		this.financial_year = financial_year;
+	}
+
+
+	public Date getAssesment_year() {
+		return assesment_year;
+	}
+
+
+	public void setAssesment_year(Date assesment_year) {
+		this.assesment_year = assesment_year;
+	}
+
+
+	public FileContent getFile() {
+		return file;
+	}
+
+
+	public void setFile(FileContent file) {
+		this.file = file;
+	}
+	
+	
+	
+
+}

@@ -1,0 +1,110 @@
+package com.hariyali.hariyali_project.confing;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
+import com.hariyali.hariyali_project.dao.TokenLoginUserRepository;
+import com.hariyali.hariyali_project.dao.UsersRepository;
+import com.hariyali.hariyali_project.entity.TokenLoginUser;
+import com.hariyali.hariyali_project.entity.UserType;
+import com.hariyali.hariyali_project.entity.Users;
+import com.hariyali.hariyali_project.service.TokenLoginUserService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+@Component
+public class JwtHelper implements Serializable{
+	
+	@Autowired
+	UsersRepository jwtRepository ;
+	
+	@Autowired
+	TokenLoginUserService tokenService;
+	
+	
+	private static final long serialVersionUID = -234234523523L;
+	
+	@Value("${jwt.expireTime}")
+	private long timeInHours;
+	
+	public static final long JWT_TOKEN_VALIDITY = 60 * 60 * 1000 ; // 1 Hr
+
+//	@Value("${jwt.secret}")
+//	private String secretKey;
+	
+	
+	private String secretKey="boooooooooom!!!!";
+
+	// retrieve username from jwt token
+	public String getUsernameFromToken(String token) {
+		return getClaimFromToken(token, Claims::getSubject);
+	}
+
+	// retrieve expiration date from jwt token
+	public Date getExpirationDateFromToken(String token) {
+		return (Date) getClaimFromToken(token, Claims::getExpiration);
+	}
+
+	public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+		final Claims claims = getAllClaimsFromToken(token);
+		return claimsResolver.apply(claims);
+	}
+
+	// for retrieving any information from token we will need the secret key
+	private Claims getAllClaimsFromToken(String token) {
+		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+	}
+
+	// check if the token has d
+	private Boolean isTokenExpired(String token) {
+		final Date expiration = getExpirationDateFromToken(token);
+		return expiration.before(new Date(0));
+	}
+
+	// generate token for user
+	public String generateToken(UserDetails userDetails) {
+		Map<String, Object> claims = new HashMap<>();
+//		claims.put("role", "admin");
+		//add Role in Token
+		//Users user = jwtRepository.findByUserEmail(userDetails.getUsername());
+		Users user = jwtRepository.findByDonorId(userDetails.getUsername());
+		UserType userType = user.getUserRole();
+		
+		Integer roleId = userType.getUsertypeId();
+		String roleName = userType.getUsertypeName();
+		claims.put("roleId", roleId);
+		claims.put("usertypNm", roleName);
+		claims.put("username", user.getUserName());
+		claims.put("pass", user.getUserPassword());
+		claims.put("email", user.getUserEmail());
+		claims.put("userId", user.getUserId());
+		return doGenerateToken(claims, userDetails.getUsername());
+	}
+
+	// while creating the token -
+	// 1. Define claims of the token, like Issuer, Expiration, Subject, and the ID
+	// 2. Sign the JWT using the HS512 algorithm and secret key.
+	private String doGenerateToken(Map<String, Object> claims, String subject) {
+		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
+				.signWith(SignatureAlgorithm.HS512, secretKey).compact();
+	}
+
+	// validate token
+	public Boolean validateToken(String token, UserDetails userDetails) {
+		final String username = getUsernameFromToken(token);
+		TokenLoginUser tokenLoginUser = tokenService.findByUsername(username);
+		tokenService.refreshToken(tokenLoginUser);
+		boolean flag=token.equalsIgnoreCase(tokenLoginUser.getToken());		
+		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token) && flag);
+	}
+}

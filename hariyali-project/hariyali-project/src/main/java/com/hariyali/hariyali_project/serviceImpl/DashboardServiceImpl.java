@@ -1,0 +1,82 @@
+package com.hariyali.hariyali_project.serviceImpl;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hariyali.hariyali_project.confing.JwtHelper;
+import com.hariyali.hariyali_project.dao.DashboardQuery;
+import com.hariyali.hariyali_project.dao.StoriesRepository;
+import com.hariyali.hariyali_project.dao.TransactionSRepository;
+import com.hariyali.hariyali_project.dao.UsersRepository;
+import com.hariyali.hariyali_project.dto.DashboardDto;
+import com.hariyali.hariyali_project.dto.JwtResponse;
+import com.hariyali.hariyali_project.entity.Users;
+import com.hariyali.hariyali_project.service.DashboardService;
+
+import jakarta.servlet.http.HttpServletRequest;
+@Service
+public class DashboardServiceImpl implements DashboardService{
+	
+	@Autowired
+	private TransactionSRepository transactionRepository;
+	
+	@Autowired
+	private UsersRepository userRepository;
+	
+	@Autowired
+	private JwtHelper jwtHelper;
+	
+	@Autowired
+	private StoriesRepository storiesRepository;
+	private static final Logger logger = LoggerFactory.getLogger(DashboardServiceImpl.class);
+
+	@Override
+	public JwtResponse<DashboardDto> getDashboardData(HttpServletRequest request) {
+		logger.info("get Dashboarddata method called successfully...");
+		JwtResponse<DashboardDto> response = new JwtResponse<>();
+		String token = request.getHeader("Authorization");
+		String donorId = jwtHelper.getUsernameFromToken(token.substring(7));
+		Users user = userRepository.findByDonorId(donorId);
+		System.out.println("dash User :"+user.getUserId());
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		try
+		
+		{
+			DashboardDto res; 
+			String role =user.getUserRole().getUsertypeName();
+			System.out.println(role);
+			
+			if(role.equals("Admin")) {
+				res = mapper.convertValue(transactionRepository.getTotalDonationOfAllDonors(),DashboardDto.class);
+				System.err.println(res);
+			}
+			else {
+				res = mapper.convertValue(transactionRepository.getTotalDonationOfSpecificUser(user.getUserId()),DashboardDto.class);
+				System.err.println(res);
+			}
+			
+			res.setDonorCount(userRepository.getDonorCount());
+			response.setMessage("Data fetch Successfully");
+			response.setResult(res);
+			response.setStatus("SUCCESS");
+			response.setStatusCode(HttpStatus.OK);
+			logger.info("get Dashboard data method executed successfully...");
+			return response;
+			
+		}catch(Exception e)
+		{
+			logger.error("error occured"+e);	
+		}
+		response.setMessage("Something went wrong");
+		response.setStatus("ERROR");
+		response.setStatusCode(HttpStatus.NOT_FOUND);
+		return response;
+	}
+
+}

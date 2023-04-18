@@ -1,0 +1,170 @@
+package com.hariyali.hariyali_project.serviceImpl;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hariyali.hariyali_project.confing.JwtHelper;
+import com.hariyali.hariyali_project.dao.StoriesRepository;
+import com.hariyali.hariyali_project.dao.UsersRepository;
+import com.hariyali.hariyali_project.dto.JwtResponse;
+import com.hariyali.hariyali_project.dto.PackageResponse;
+import com.hariyali.hariyali_project.dto.StoriesRequest;
+import com.hariyali.hariyali_project.dto.StoriesResponse;
+import com.hariyali.hariyali_project.entity.Packages;
+import com.hariyali.hariyali_project.entity.Stories;
+import com.hariyali.hariyali_project.entity.Users;
+import com.hariyali.hariyali_project.service.StoriesService;
+
+import org.hibernate.Filter;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.HttpServletRequest;
+
+@Service
+public class StoriesServiceImpl implements StoriesService {
+	
+	@Autowired
+	private StoriesRepository storyRepo;
+	
+	@Autowired
+	private EntityManager entityManager;
+	
+	@Autowired
+	private JwtHelper jwtHelper;
+	
+	@Autowired
+	private UsersRepository userRepository;
+	@Override
+	public Map<String, Object> getAllStories(int pageNo, int pageSize) {
+		Pageable paging = PageRequest.of(pageNo - 1, pageSize);
+		Page<Stories> stories = this.storyRepo.findAllByOrderByStoriesIdDesc(paging);
+		System.out.println("in Stories service");
+		Map<String, Object> response = new HashMap<>();
+		response.put("stories", stories.getContent());
+		response.put("currentPage", stories.getNumber());
+		response.put("totalItems", stories.getTotalElements());
+		response.put("totalPages", stories.getTotalPages());
+//				session.disableFilter("deletedUserFilter");
+		if (stories.hasContent()) {
+			return response;
+		} else {
+			return null;
+		}	}
+
+	@Override
+	public Stories getBystoriesId(int storiesId) {
+		Stories stories = new Stories();
+		Session session = entityManager.unwrap(Session.class);
+		Filter filter = session.enableFilter("deletedUserFilter");
+		filter.setParameter("isDeleted", false);
+		System.out.println("in stories service");
+		stories = this.storyRepo.findByStoriesId(storiesId);
+
+		session.disableFilter("deletedUserFilter");
+		return stories;
+	}
+
+	@Override
+	public JwtResponse<Stories> saveStories(StoriesRequest stories,HttpServletRequest request) {
+		JwtResponse<Stories> response = new JwtResponse<>();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		
+		Stories savedStories = mapper.convertValue(stories, Stories.class);
+		
+		String token = request.getHeader("Authorization");
+		String donorId = jwtHelper.getUsernameFromToken(token.substring(7));
+		Users user = this.userRepository.findByDonorID(donorId);
+		savedStories.setCreatedDate(new Date());
+		savedStories.setUserId(user);
+		savedStories = this.storyRepo.save(savedStories);
+		response.setMessage("Story Added Successfully");
+		
+		response.setStatus("Success");
+		response.setStatusCode(HttpStatus.CREATED);
+		response.setResult(savedStories);
+		
+		
+		return response;
+	}
+
+	@Override
+	public JwtResponse<Stories> updateStories(String name, StoriesRequest stories, HttpServletRequest request) {
+		JwtResponse<Stories> response = new JwtResponse<>();
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		Stories storiesResponse = this.storyRepo.findByName(name);
+		if (storiesResponse != null) {
+			storiesResponse.setDescription(stories.getDescription());
+			storiesResponse.setEmail(stories.getName());
+			storiesResponse.setName(stories.getName());
+		
+			
+
+			this.storyRepo.save(storiesResponse);
+			response.setMessage("Story Has Been Updated Successfully");
+			response.setResult(storiesResponse);
+			response.setStatus("SUCCESS");
+			response.setStatusCode(HttpStatus.OK);
+			return response;
+		} else {
+			response.setMessage("Stories Not Found With packge title " + name);
+			response.setStatus("ERROR");
+			response.setStatusCode(HttpStatus.NOT_FOUND);
+			return response;
+		}
+	}
+
+	@Override
+	public JwtResponse<Stories> deleteStories(String name) {
+		JwtResponse<Stories> response = new JwtResponse<>();
+		Stories storiesResponse = this.storyRepo.findByName(name);
+		if (storiesResponse != null) {
+//			storiesResponse.setIsdeleted(null);
+			this.storyRepo.save(storiesResponse);
+			response.setMessage("Stories Has Been Deleted Successfully");
+			response.setResult(storiesResponse);
+			response.setStatus("SUCCESS");
+			response.setStatusCode(HttpStatus.OK);
+			return response;
+		}
+		response.setMessage("Stories Not Found With user code" + name);
+		response.setStatus("ERROR");
+		response.setStatusCode(HttpStatus.NOT_FOUND);
+		return response;
+	}
+
+	@Override
+	public Stories getByname(String name) {
+		Stories stories = new Stories();
+		Session session = entityManager.unwrap(Session.class);
+//		Filter filter = session.enableFilter("deletedUserFilter");
+//		filter.setParameter("isDeleted", false);
+
+		stories = this.storyRepo.findByName(name);
+
+		session.disableFilter("deletedUserFilter");
+		return stories;
+	}
+
+	@Override
+	public List<Stories> getAllStoryDataByUserId(int userId) {
+		return storyRepo.getAllStoryDataByUserId(userId);
+	}
+	
+
+}

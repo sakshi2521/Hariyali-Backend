@@ -1,0 +1,80 @@
+package com.hariyali.hariyali_project.dto;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import org.springframework.http.HttpStatusCode;
+import lombok.Data;
+@JsonInclude(value = Include.NON_NULL)
+@Data
+public class JwtResponse<T> {
+public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public HttpStatusCode getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(HttpStatusCode statusCode) {
+		this.statusCode = statusCode;
+	}
+
+	public T getResult() {
+		return result;
+	}
+
+	public void setResult(T result) {
+		this.result = result;
+	}
+
+private String token;
+private String role;
+private String status;
+private HttpStatusCode statusCode;
+private T result;
+private String message;
+	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public JwtResponse(String token) {
+		super();
+		this.token = token;
+		this.status= status;
+		this.message = message;
+	}
+
+	public JwtResponse() {
+		super();
+	}
+
+	@Override
+	public String toString() {
+		return "JwtResponse [token=" + token + "]";
+	}
+}

@@ -1,0 +1,120 @@
+package com.hariyali.hariyali_project.entity;
+
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+@Table(name="plants")
+public class Plants {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "plant_id")
+	private int plantId;
+	
+	@Column(name = "title", length = 20)
+	private String title; 
+	
+	@Column(name = "quantity")
+	private double Quantity;
+	
+	@Column(name = "total")
+	private double Total;
+	
+	@Column(name = "cost")
+	private double cost;
+	
+	@Column(name = "status")
+	private boolean status;
+
+//	@JsonIgnore
+//	@ManyToMany(fetch = FetchType.LAZY,
+//            cascade = {
+//                    CascadeType.PERSIST,
+//                    CascadeType.MERGE
+//                },
+//                mappedBy = "plant")
+//	 private Set plant = new HashSet<>();
+	
+//	@ManyToMany(fetch = FetchType.LAZY,mappedBy="plants"
+//          )
+//	@JsonBackReference
+//	private Set<Packages>packages;
+
+	public int getPlantId() {
+		return plantId;
+	}
+
+	public void setPlantId(int plantId) {
+		this.plantId = plantId;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public double getQuantity() {
+		return Quantity;
+	}
+
+	public void setQuantity(double quantity) {
+		Quantity = quantity;
+	}
+
+	public double getTotal() {
+		return Total;
+	}
+
+	public void setTotal(double total) {
+		Total = total;
+	}
+
+	public double getCost() {
+		return cost;
+	}
+
+	public void setCost(double cost) {
+		this.cost = cost;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+//	public Set<Packages> getPackages() {
+//		return packages;
+//	}
+//
+//	public void setPackages(Set<Packages> packages) {
+//		this.packages = packages;
+//	}
+	
+	
+
+				
+	
+    
+}

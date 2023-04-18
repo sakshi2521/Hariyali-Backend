@@ -1,0 +1,45 @@
+package com.hariyali.hariyali_project.serviceImpl;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hariyali.hariyali_project.dao.DashboardRepository;
+import com.hariyali.hariyali_project.dao.UsersRepository;
+import com.hariyali.hariyali_project.dto.DashBoardDto;
+import com.hariyali.hariyali_project.dto.JwtResponse;
+import com.hariyali.hariyali_project.service.DashboardService;
+@Service
+public class DashboardServiceImpl implements DashboardService{
+	
+	@Autowired
+	private DashboardRepository dashboardRepository;
+	
+	@Autowired
+	private UsersRepository userRepository;
+	
+	private static final Logger logger = LoggerFactory.getLogger(DashboardServiceImpl.class);
+
+	@Override
+	public JwtResponse<DashBoardDto> getDashboardData() {
+		JwtResponse<DashBoardDto> response = new JwtResponse<>();
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		try
+		
+		{
+			DashBoardDto res = mapper.convertValue(dashboardRepository.getDashboardCount(),DashBoardDto.class);
+		res.setDonorCount(userRepository.getDonorCount());
+		
+			
+		}catch(Exception e)
+		{
+			
+		}
+		return null;
+	}
+
+}

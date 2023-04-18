@@ -1,0 +1,29 @@
+package com.hariyali.hariyali_project.dto;
+
+import java.util.Date;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class MapRequest {
+	
+	    private Integer id;
+	    
+	    private String activity;
+
+	    private Long lat;
+	   
+	    private Long lng;
+	   
+	    private Long distance;
+	   
+	    private Date timestamp;
+	   
+	    private String session_id;
+	    
+	    private int transactionId;
+
+		
+}
